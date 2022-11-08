@@ -1,0 +1,13 @@
+package com.springsecurity.bootsecurity;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AlisecurityApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
