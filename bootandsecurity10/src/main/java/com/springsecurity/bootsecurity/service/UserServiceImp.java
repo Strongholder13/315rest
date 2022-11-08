@@ -6,6 +6,7 @@ import com.springsecurity.bootsecurity.model.Role;
 import com.springsecurity.bootsecurity.model.User;
 import com.springsecurity.bootsecurity.repository.RolesRepository;
 import com.springsecurity.bootsecurity.repository.UsersRepository;
+import com.springsecurity.bootsecurity.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -40,6 +41,12 @@ public class UserServiceImp implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
     }
+
+    @Transactional
+    @Override
+    public void add(User user) {
+        usersRepository.save(user);
+    }
     @Transactional
     @Override
     public void update(User user, List<String> roles) {
@@ -58,11 +65,22 @@ public class UserServiceImp implements UserService {
         if (user.getPassword() == "") {
             user.setPassword(toChange.getPassword());
         } else {
-           user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         usersRepository.save(user);
-
     }
+
+        @Transactional
+        @Override
+        public void update(User user) {
+            usersRepository.save(user);
+    }
+
+    @Override
+    public User getUser(int id) {
+        return usersRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
     @Override
     public List<User> listUsers() {
         return usersRepository.findAll();

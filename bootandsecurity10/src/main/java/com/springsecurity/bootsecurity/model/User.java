@@ -6,6 +6,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 
@@ -24,6 +26,8 @@ public class User implements UserDetails {
     private String username;
 
     @Column(name = "Name")
+    @NotEmpty(message = "insert name")
+    @Size(min = 2, max = 50, message = "inset name between 2 and 50 characters")
     private String name;
 
     @Column(name = "Surname")
