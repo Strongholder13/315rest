@@ -3,21 +3,12 @@ package com.springsecurity.bootsecurity.controllers;
 import com.springsecurity.bootsecurity.model.Role;
 import com.springsecurity.bootsecurity.model.User;
 import com.springsecurity.bootsecurity.service.UserService;
-import com.springsecurity.bootsecurity.util.UserErrorResponse;
-import com.springsecurity.bootsecurity.util.UserNotCreatedException;
-import com.springsecurity.bootsecurity.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 
