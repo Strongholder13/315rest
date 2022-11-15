@@ -17,6 +17,8 @@ public interface UserService extends UserDetailsService {
     User getUser(int id);
     List<User> listUsers();
     List<String> listRoles();
+    List<Role> allRoles();
+
     void delete(int id);
     @Transactional
     User findByUsername(String username);

@@ -15,11 +15,11 @@
     <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
     <div class="container-fluid me-auto">
                 <span class="navbar-brand">
-                    <strong th:utext="${currentUser.getUsername()}"></strong>
+                    <strong id="currentUsername"></strong>
+
                      with roles:
-                    <span  th:each="role : ${currentUser.roles}">
-                        <a th:text="${role.getRole().substring(5)}"></a>
-                        </span>
+                    <strong id="currentRoles"></strong>
+
                 </span>
     </div>
     <span class="nav-item ms-auto">
@@ -59,7 +59,7 @@
             <!--закладки all users и new user-->
           <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#usersTable">Users table</a>
+              <a class="nav-link active" id="nav-home-tab"  data-toggle="tab" href="#usersTable" role="tab">Users table</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#newUser">New User</a>
@@ -108,40 +108,34 @@
                 <div class="card-header">Add user</div>
                 <div class="card-body">
                   <div class="col-md-4 mx-auto">
-                  <form th:method="Post" th:action="@{/registration}" >
+                  <form id="newUserForm">
                     <div class="form-group text-center">
-                      <label for="name"><strong>First Name</strong></label>
-                      <input type="text" class="form-control" id="name" th:field="*{newUser.name}">
+                      <label for="nameNew"><strong>First Name</strong></label>
+                      <input type="text" class="form-control" name="name" id="nameNew" placeholder="name">
                     </div>
                     <div class="form-group text-center">
-                      <label for="surname"><strong>Last Name</strong></label>
-                      <input type="text" class="form-control" id="surname" th:field="*{newUser.surname}">
+                      <label for="surnameNew"><strong>Last Name</strong></label>
+                      <input type="text" class="form-control" name="surname" id="surnameNew" placeholder="surname">
                     </div>
                     <div class="form-group text-center">
-                      <label for="age"><strong>Age</strong></label>
-                      <input type="text" class="form-control" id="age" th:field="*{newUser.age}">
+                      <label for="ageNew"><strong>Age</strong></label>
+                      <input type="text" class="form-control" name="age" id="ageNew" placeholder="age">
                     </div>
                     <div class="form-group text-center">
-                      <label for="username"><strong>Email</strong></label>
-                      <input type="text" class="form-control" id="username" th:field="*{newUser.username}">
+                      <label for="usernameNew"><strong>Email</strong></label>
+                      <input type="text" class="form-control" name="username" id="usernameNew" placeholder="email">
                     </div>
                     <div class="form-group text-center">
-                      <label for="password"><strong>Password</strong></label>
-                      <input type="text" class="form-control" id="password" th:field="*{newUser.password}">
+                      <label for="passwordNew"><strong>Password</strong></label>
+                      <input type="text" class="form-control" name="password" id="passwordNew" placeholder="password">
                     </div>
                     <div class="form-group text-center">
-                      <label for="role"><strong>Role</strong></label>
-                    <select type="text" class="custom-select"
-                            id="role"
-                            multiple="multiple" size="2" name="role">
-
-                      <option th:each="role : ${allRoles}" th:value="${role}" th:text="${role.substring(5)} " ></option>
-
-
-                    </select>
+                      <label for="newUserRoles"><strong>Role</strong></label>
+                        <select class="form-control" name="roles" id="newUserRoles" size="2" multiple>
+                        </select>
                     </div>
                     <div class="form-group text-center">
-                    <button type="submit" value="Save" class="btn btn-success">Add new user</button>
+                    <button type="submit" id="newBtn" class="btn btn-success">Add new user</button>
 
                     </div>
                   </form>
@@ -171,17 +165,8 @@
 
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                      <td th:text="${currentUser.id}"/>
-                      <td th:text="${currentUser.name}"/>
-                      <td th:text="${currentUser.surname}"/>
-                      <td th:text="${currentUser.age}"/>
-                      <td th:text="${currentUser.username}"/>
-                      <td><a th:each="role : ${currentUser.getRoles()}">
-                        <a th:text="${role.getRole().substring(5)}"></a>
-                      </a></td>
-                    </tr>
+                    <tbody id="currentUser">
+
                     </tbody>
                   </table>
                 </div>
@@ -191,18 +176,9 @@
 
       </div>
       </div>
-      <div class="editForm">
-          <form method="POST"
-                action="@{/update}"
 
-                id="${'editForm' + ussr.id}">
-
-              <div class="modal fade" id="updateModal"
-                   data-backdrop="static"
-                   data-keyboard="false" tabindex="-1"
-
-                   aria-hidden="true">
-
+      <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <form id="editForm">
                   <div class="modal-dialog" role="document" aria-labelledby="updateModalLabel">
                       <div class="modal-content">
 
@@ -216,23 +192,22 @@
                               <div class="col-md-8 mx-auto">
 
                                   <div class="form-group text-center">
-                                      <label for="edit-id"><strong>ID</strong></label>
-                                      <input type="text" class="form-control" id="edit-id" readonly
-                                             value="">
+                                      <label for="edID"><strong>ID</strong></label>
+                                      <input type="text" class="form-control" id="edID" name="id" disabled>
                                   </div>
                                   <div class="form-group text-center">
-                                      <label for="name"><strong>First Name</strong></label>
+                                      <label for="e-name"><strong>First Name</strong></label>
                                       <input type="text" name="name" class="form-control" id="e-name"
-                                             value="">
+                                             value="name">
                                   </div>
                                   <div class="form-group text-center">
-                                      <label for="surname"><strong>Last Name</strong></label>
+                                      <label for="e-surname"><strong>Last Name</strong></label>
                                       <input type="text" name="surname" class="form-control" id="e-surname"
                                              value="">
                                   </div>
                                   <div class="form-group text-center">
-                                      <label for="age"><strong>Age</strong></label>
-                                      <input type="text" name="age" class="form-control" id="edit-age"
+                                      <label for="edit-age"><strong>Age</strong></label>
+                                      <input type="text" name="e-age" class="form-control" id="edit-age"
                                              value="">
                                   </div>
                                   <div class="form-group text-center">
@@ -241,7 +216,7 @@
                                              value="">
                                   </div>
                                   <div class="form-group text-center">
-                                      <label for="password"><strong>Password</strong></label>
+                                      <label for="edit-password"><strong>Password</strong></label>
                                       <input type="text" name="password" class="form-control" id="edit-password">
                                   </div>
                                   <div class="form-group text-center">
@@ -249,9 +224,8 @@
                                       <!--                                                        <input type="hidden" name="roles" th:field="${ussr.roles}"/>-->
                                       <select class="custom-select"
                                               id="e-Role"
-                                              multiple="multiple" name="role" size="2">
-                                          <option th:each="role : ${allRoles}" th:value="${role}"
-                                                  th:text="${role.substring(5)} "></option>
+                                              multiple="multiple" name="roles" size="2">
+
                                       </select>
                                   </div>
 
@@ -261,23 +235,21 @@
 
                               </div>
                               <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  <input type="submit"
-                                         class="btn btn-primary"
-                                         value="Edit"/>
+                                  <button type="button" id="editModalCloseButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-danger" onclick="Edit()">Edit</button>
                               </div>
                           </div>
                       </div>
                   </div>
-              </div>
           </form>
 
       </div>
 
       <!--    Modal delete-->
-      <div class="modal fade" id="${'delete' + ussr.id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
-              <div class="modal-content">
+              <form id="DeleteForm" >
+                  <div class="modal-content">
                   <div class="modal-header">
                       <h3 class="modal-title" id="deleteModalLabel">Delete user</h3>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -286,26 +258,26 @@
                   </div>
                   <div class="modal-body">
                       <div class="col-md-8 mx-auto">
-                          <form >
+
                               <div class="form-group text-center">
-                                  <label for="id"><strong>ID</strong></label>
-                                  <input type="text" class="form-control" id="id" readonly value="${ussr.id}">
+                                  <label for="delID"><strong>ID</strong></label>
+                                  <input type="text" class="form-control" id="delID" name="id" disabled>
                               </div>
                               <div class="form-group text-center">
-                                  <label for="name"><strong>First Name</strong></label>
-                                  <input type="text" class="form-control" id="d-name" readonly value="${ussr.name}">
+                                  <label for="delName"><strong>First Name</strong></label>
+                                  <input type="text" class="form-control" id="delName" name="name" disabled>
                               </div>
                               <div class="form-group text-center">
-                                  <label for="surname"><strong>Last Name</strong></label>
-                                  <input type="text" class="form-control" id="d-surname" readonly value="${ussr.surname}">
+                                  <label for="delSN"><strong>Last Name</strong></label>
+                                  <input type="text" class="form-control" id="delSN" disabled>
                               </div>
                               <div class="form-group text-center">
-                                  <label for="age"><strong>Age</strong></label>
-                                  <input type="text" class="form-control" id="aged" readonly value="${ussr.age}">
+                                  <label for="delAge"><strong>Age</strong></label>
+                                  <input type="text" class="form-control" id="delAge" disabled>
                               </div>
                               <div class="form-group text-center">
-                                  <label for="username"><strong>Email</strong></label>
-                                  <input type="text" class="form-control" id="usernamed" readonly value="${ussr.username}">
+                                  <label for="delUname"><strong>Email</strong></label>
+                                  <input type="text" class="form-control" id="delUname" disabled>
                               </div>
 
                               <div class="form-group text-center">
@@ -318,18 +290,16 @@
                                       <option >USER</option>
                                   </select>
                               </div>
-                          </form>
+
                       </div>
                       <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <input type="submit"
-
-                                 class="btn btn-danger"
-                                 value="Delete"/>
+                          <button type="button" id="deleteModalCloseButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-danger" onclick="Delete()">Delete</button>
                       </div>
                   </div>
 
               </div>
+              </form>
           </div>
       </div>
 

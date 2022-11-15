@@ -1,18 +1,23 @@
 package com.springsecurity.bootsecurity.controllers;
 
+import com.springsecurity.bootsecurity.model.Role;
 import com.springsecurity.bootsecurity.model.User;
 import com.springsecurity.bootsecurity.service.UserService;
 import com.springsecurity.bootsecurity.util.UserErrorResponse;
 import com.springsecurity.bootsecurity.util.UserNotCreatedException;
 import com.springsecurity.bootsecurity.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -28,8 +33,18 @@ public class ControllerREST {
     }
 
     @GetMapping ("/users")
-    public List<User> userList(){
-        return userService.listUsers();
+    public ResponseEntity<List<User>> userList(){
+        return new ResponseEntity<>(userService.listUsers(),HttpStatus.OK);
+    }
+
+    @GetMapping ("/roles")
+    public ResponseEntity<List<Role>> roleListList(){
+        return new ResponseEntity<>(userService.allRoles(), HttpStatus.OK);
+    }
+    @PatchMapping("/users")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        userService.update(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping ("/users/{id}")
@@ -37,24 +52,14 @@ public class ControllerREST {
         return userService.getUser(id);
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<HttpStatus> create (@RequestBody @Valid User user, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            StringBuilder errorMes = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors){
-                errorMes.append(error.getField())
-                        .append(" - ").append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new UserNotCreatedException(errorMes.toString());
-        }
-        userService.add(user);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @GetMapping ("/user")
+    public ResponseEntity<User>  userCurrent(Authentication authentication) {
+        return new ResponseEntity<>(userService.findByUsername(authentication.getName()), HttpStatus.OK) ;
     }
-    @PutMapping("/users")
+
+    @PostMapping("/users")
     public User update (@RequestBody @Valid User user){
-        userService.update(user);
+        userService.add(user);
         return user;
     }
     @DeleteMapping("/users/{id}")
@@ -64,23 +69,8 @@ public class ControllerREST {
     }
 
 
-    @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(UserNotFoundException e){
-        UserErrorResponse response = new UserErrorResponse(
-                "User not found",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
 
-    @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(UserNotCreatedException e) {
-        UserErrorResponse response = new UserErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+
 
 
 }
